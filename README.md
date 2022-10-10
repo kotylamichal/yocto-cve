@@ -2,7 +2,8 @@
 
 ### Usage
 
-1. Add [CVE-CHECK] flag to Yocto
+1. Add [CVE-CHECK](https://hub.mender.io/t/how-to-run-cve-checks-using-the-yocto-project/1142)
+flag to Yocto
 2. Rebuild system image
 3. Build & run CVE list generator
 
