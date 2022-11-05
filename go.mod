@@ -13,6 +13,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/mattn/go-sqlite3 v1.14.15 // indirect
 	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/phyber/negroni-gzip v1.0.0 // indirect
 	github.com/rs/cors v1.8.2 // indirect
