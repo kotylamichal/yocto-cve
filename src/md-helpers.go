@@ -8,7 +8,7 @@ import (
 func printMdLine(filename *os.File, str string) {
 	n, err := filename.WriteString(str)
 	if err != nil {
-		fmt.Println("Error while trying to write %d bytes:", n)
+		fmt.Printf("Error while trying to write %d bytes:\n", n)
 		fmt.Println(err)
 		fmt.Println("Exiting program...")
 	}
@@ -37,7 +37,7 @@ func printMdEmptyLine(filename *os.File) {
 
 /* CVE table functions */
 func printCVEHeader(filename *os.File) {
-	printMdLineln(filename, "| CVE ID | Score V2 | Score V3 | Attack vector |")
+	printMdLineln(filename, "| CVEHello ID | Score V2 | Score V3 | Attack vector |")
 	printMdLineln(filename, "|--------|----------|----------|---------------|")
 }
 
