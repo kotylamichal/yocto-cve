@@ -23,4 +23,9 @@ func main() {
 		fmt.Println("JSON converted to SQLITE. Generating raport...")
 	}
 
+	issues := DBCVE_CountIssues("../cve.sqlite")
+	packages := DBCVE_PackagesList("../cve.sqlite")
+
+	fmt.Printf("Total vulnerabilities: %d\n", issues)
+	fmt.Printf("Affected packages: %d\n", len(packages))
 }
