@@ -26,7 +26,8 @@ func DBCVE_Create(filename string) int {
 			package text,
 			scorev2 float,
 			scorev3 float,
-			vector text); 
+			vector text,
+			source text);
 	`)
 
 	_, err = sqlStmt.Exec()
@@ -38,7 +39,7 @@ func DBCVE_Create(filename string) int {
 	return 0
 }
 
-func DBCVE_Insert(filename string, id int, cve string, pkg string, scorev2 string, scorev3 string, vector string) int {
+func DBCVE_Insert(filename string, id int, cve string, pkg string, scorev2 string, scorev3 string, vector string, source string) int {
 
 	db, err := sql.Open("sqlite3", filename)
 
@@ -47,9 +48,9 @@ func DBCVE_Insert(filename string, id int, cve string, pkg string, scorev2 strin
 	}
 	defer db.Close()
 
-	sqlStmt, err := db.Prepare("INSERT INTO issues VALUES (?,?,?,?,?,?)")
+	sqlStmt, err := db.Prepare("INSERT INTO issues VALUES (?,?,?,?,?,?,?)")
 
-	_, err = sqlStmt.Exec(id, cve, pkg, scorev2, scorev3, vector)
+	_, err = sqlStmt.Exec(id, cve, pkg, scorev2, scorev3, vector, source)
 	if err != nil {
 		log.Printf("%q: %s\n", err, sqlStmt)
 		return 1
@@ -82,7 +83,8 @@ func DBCVE_FromJSON(jsonname string, dbname string) int {
 			if packages.Packages[i].Issues[j].Status == "Unpatched" {
 				DBCVE_Insert(dbname, idCounter, packages.Packages[i].Issues[j].Id,
 					packages.Packages[i].Name, packages.Packages[i].Issues[j].ScoreV2,
-					packages.Packages[i].Issues[j].ScoreV3, packages.Packages[i].Issues[j].Vector)
+					packages.Packages[i].Issues[j].ScoreV3, packages.Packages[i].Issues[j].Vector,
+					packages.Packages[i].Layer)
 				idCounter = idCounter + 1
 			}
 		}
@@ -107,4 +109,43 @@ func DBCVE_CountIssues(dbname string) int {
 	_ = db.QueryRow("SELECT count(*) from issues").Scan(&cnt)
 
 	return cnt
+}
+
+func DBCVE_CountPackageIssues(dbname string, pkgname string) int {
+
+	db, err := sql.Open("sqlite3", dbname)
+
+	if err != nil {
+		fmt.Println(err)
+		return -1
+	}
+	defer db.Close()
+
+	var cnt int
+	_ = db.QueryRow("SELECT count(*) from issues WHERE source = " + "aaa").Scan(&cnt)
+
+	return cnt
+}
+
+func DBCVE_PackagesList(dbname string) []string {
+
+	db, err := sql.Open("sqlite3", dbname)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT DISTINCT package from issues")
+	fmt.Println("")
+
+	var list []string
+	for rows.Next() {
+		var tmpname string
+		rows.Scan(&tmpname)
+		list = append(list, tmpname)
+	}
+
+	return list
 }
